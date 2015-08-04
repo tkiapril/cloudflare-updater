@@ -2,7 +2,7 @@ import pathlib
 import socket
 
 import pyflare
-import yaml
+from yaml import load
 
 
 s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -11,7 +11,7 @@ myip = s.getsockname()[0]
 s.close()
 
 with (pathlib.Path(__file__).resolve().parent / 'config.yaml').open('r') as r:
-    update_list = yaml.load(r)
+    update_list = load(r)
 
 for account in update_list:
     records = {}
