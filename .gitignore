@@ -58,3 +58,6 @@ target/
 
 # Configuration
 config.yaml
+
+# Virtualenv
+virtualenv/
