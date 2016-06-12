@@ -60,4 +60,5 @@ target/
 config.yaml
 
 # Virtualenv
+venv/
 virtualenv/
