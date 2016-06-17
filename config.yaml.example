@@ -1,5 +1,5 @@
 - email: example@example.com
   targets:
-  - {id: 'dns record id from rec_load_all in string', subdomain: 'subdomain FQDN in string'}
+  - {id: record id, zone_id: zone id}  # get these from lookup_id.py
   token: CloudFlare API Token
 
