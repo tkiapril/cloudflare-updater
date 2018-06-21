@@ -27,7 +27,7 @@ def main():
             {
                 'X-Auth-Email': user['email'],
                 'X-Auth-Key': user['token'],
-                'DNT': 1,
+                'DNT': '1',
             }
         )
         for target in user['targets']:

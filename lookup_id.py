@@ -35,7 +35,7 @@ for example, example.com:cname.
             {
                 'X-Auth-Email': user['email'],
                 'X-Auth-Key': user['token'],
-                'DNT': 1,
+                'DNT': '1',
             }
         )
         if session.get(api('/user')).json()['success']:
