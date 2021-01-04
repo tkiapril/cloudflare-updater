@@ -1,5 +1,5 @@
 - email: example@example.com
   targets:
-  - {id: record id, zone_id: zone id}  # get these from lookup_id.py
+  - {id: record id, zone_id: zone id, interface: interface name}  # get these from lookup_id.py
   token: CloudFlare API Token
 
