@@ -1,8 +1,11 @@
-import pathlib
-import socket
+from fcntl import ioctl
+from socket import AF_INET, SOCK_DGRAM, inet_ntoa, socket
+from struct import pack
+from pathlib import Path
 from pprint import pprint
 
-import requests
+from requests import Session
+from requests.adapters import DEFAULT_POOLSIZE
 from yaml import load
 
 
@@ -11,18 +14,15 @@ def api(endpoint):
 
 
 def main():
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    s.connect(('1.1.1.1', 53))
-    myip = s.getsockname()[0]
-    s.close()
-
+    interface_ips = {}
+    
     with (
-        pathlib.Path(__file__).resolve().parent / 'config.yaml'
+        Path(__file__).resolve().parent / 'config.yaml'
     ).open('r') as r:
         update_list = load(r)
 
     for user in update_list:
-        session = requests.Session()
+        session = Session()
         session.headers.update(
             {
                 'X-Auth-Email': user['email'],
@@ -31,6 +31,23 @@ def main():
             }
         )
         for target in user['targets']:
+            if (target['interface'] not in interface_ips.keys()):
+                s = socket(AF_INET, SOCK_DGRAM)
+                internal_ip = inet_ntoa(
+                    ioctl(
+                        s.fileno(),
+                        0x8915,  # SIOCGIFADDR
+                        pack('256s', bytes(target['interface'][:15], 'utf-8')),
+                    )[20:24]
+                )
+                bound_sess = Session()
+                bound_sess.get_adapter('https://').init_poolmanager(
+                    connections=DEFAULT_POOLSIZE,
+                    maxsize=DEFAULT_POOLSIZE,
+                    source_address=(internal_ip, 0),
+                )
+                interface_ips[target['interface']] = bound_sess.get('https://api.ipify.org/').text
+            myip = interface_ips[target['interface']]
             endpoint = api(
                 '/zones/{zone_id}/dns_records/{id}'.format(
                     zone_id=target['zone_id'],
