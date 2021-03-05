@@ -6,7 +6,7 @@ from pprint import pprint
 
 from requests import Session
 from requests.adapters import DEFAULT_POOLSIZE
-from yaml import load
+from yaml import load, BaseLoader
 
 
 def api(endpoint):
@@ -19,7 +19,7 @@ def main():
     with (
         Path(__file__).resolve().parent / 'config.yaml'
     ).open('r') as r:
-        update_list = load(r)
+        update_list = load(r, Loader=BaseLoader)
 
     for user in update_list:
         session = Session()

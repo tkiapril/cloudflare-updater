@@ -3,7 +3,7 @@ from pathlib import Path
 from re import search, MULTILINE
 
 import requests
-import yaml
+from yaml import load, dump, BaseLoader
 
 
 def api(endpoint):
@@ -15,7 +15,7 @@ def main():
         with (
             Path(__file__).resolve().parent / 'config.yaml'
         ).open('r') as r:
-            update_list = yaml.load(r)
+            update_list = load(r, Loader=BaseLoader)
     except Exception:
         print('Could not load config file.')
         sys.exit(1)
@@ -79,7 +79,7 @@ for example, example.com:cname.
                             type=item['type'],
                             name=item['name'],
                             content=item['content'],
-                            yaml=yaml.dump(
+                            yaml=dump(
                                 [
                                     {
                                         'zone_id': item['zone_id'],
