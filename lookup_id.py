@@ -17,7 +17,7 @@ def main():
         ).open('r') as r:
             update_list = load(r, Loader=BaseLoader)
     except Exception:
-        print('Could not load config file.')
+        print('Could not load config file. Make sure you have permission to read the file.')
         sys.exit(1)
 
     with Path('/proc/net/route').open('r') as r:

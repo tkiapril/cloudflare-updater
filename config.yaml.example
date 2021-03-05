@@ -1,3 +1,6 @@
+# it is strongly recommended to set 0600 as the permission of this file, as it contains your API token that can alter
+# your DNS records.
+
 - token: CloudFlare API Token with #dns_records:edit permissions from https://dash.cloudflare.com/profile/api-tokens
   targets:
   # get these from lookup_id.py
