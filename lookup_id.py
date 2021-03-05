@@ -38,15 +38,11 @@ for example, example.com:cname.
         session = requests.Session()
         session.headers.update(
             {
-                'X-Auth-Email': user['email'],
-                'X-Auth-Key': user['token'],
+                'Authorization': 'Bearer {}'.format(user['token']),
                 'DNT': '1',
             }
         )
-        if session.get(api('/user')).json()['success']:
-            sessions.append(session)
-        else:
-            print('Login failed for account: {}'.format(user['email']))
+        sessions.append(session)
 
     for zone_name in zone_names:
         find_type = None
@@ -57,7 +53,7 @@ for example, example.com:cname.
                 print('Record type should be written after the colon.')
                 continue
         for session in sessions:
-            print('\n{}:\n\n'.format(session.headers['X-Auth-Email']))
+            print('\nToken {}... :\n\n'.format(session.headers['Authorization'][7:15]))
             zones = session.get(api('/zones')).json()['result']
             try:
                 zone_id, = [

@@ -25,8 +25,7 @@ def main():
         session = Session()
         session.headers.update(
             {
-                'X-Auth-Email': user['email'],
-                'X-Auth-Key': user['token'],
+                'Authorization': 'Bearer {}'.format(user['token']),
                 'DNT': '1',
             }
         )

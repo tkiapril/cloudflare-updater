@@ -1,5 +1,6 @@
-- email: example@example.com
+- token: CloudFlare API Token with #dns_records:edit permissions from https://dash.cloudflare.com/profile/api-tokens
   targets:
-  - {id: record id, zone_id: zone id, interface: interface name}  # get these from lookup_id.py
-  token: CloudFlare API Token
-
+  # get these from lookup_id.py
+  - id: record id
+    zone_id: zone id
+    interface: interface name
