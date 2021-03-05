@@ -1,5 +1,6 @@
-import pathlib
 import sys
+from pathlib import Path
+from re import search, MULTILINE
 
 import requests
 import yaml
@@ -12,12 +13,16 @@ def api(endpoint):
 def main():
     try:
         with (
-            pathlib.Path(__file__).resolve().parent / 'config.yaml'
+            Path(__file__).resolve().parent / 'config.yaml'
         ).open('r') as r:
             update_list = yaml.load(r)
     except Exception:
         print('Could not load config file.')
         sys.exit(1)
+
+    with Path('/proc/net/route').open('r') as r:
+        s = search(r"^(.+?)\s00000000", r.read(), MULTILINE)
+        default_iface = s.group(1) if s else ''
 
     zone_names = sys.argv[1:]
 
@@ -78,10 +83,11 @@ for example, example.com:cname.
                                 [
                                     {
                                         'zone_id': item['zone_id'],
-                                        'id': item['id']
+                                        'id': item['id'],
+                                        'interface': default_iface
                                     }
                                 ]
-                            ).strip()
+                            ).strip().replace('\n','\n  ')
                         )
                     )
 
