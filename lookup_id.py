@@ -71,7 +71,7 @@ for example, example.com:cname.
             for item in records:
                 print(
                         '  # {type}\t{name}\t-> {content}\n'
-                        '  {yaml}  # {name}\n'.format(
+                        '  {yaml}\n'.format(
                             type=item['type'],
                             name=item['name'],
                             content=item['content'],
