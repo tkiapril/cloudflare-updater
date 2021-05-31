@@ -30,7 +30,9 @@ def main():
             }
         )
         for target in user['targets']:
-            if (target['interface'] not in interface_ips.keys()):
+            internal = 'internal' not in target.keys() or bool(int(target['internal']))
+            target_interface = target['interface'] if internal else target['interface'] + '_internal'
+            if (target_interface not in interface_ips.keys()):
                 s = socket(AF_INET, SOCK_DGRAM)
                 internal_ip = inet_ntoa(
                     ioctl(
@@ -39,14 +41,17 @@ def main():
                         pack('256s', bytes(target['interface'][:15], 'utf-8')),
                     )[20:24]
                 )
-                bound_sess = Session()
-                bound_sess.get_adapter('https://').init_poolmanager(
-                    connections=DEFAULT_POOLSIZE,
-                    maxsize=DEFAULT_POOLSIZE,
-                    source_address=(internal_ip, 0),
-                )
-                interface_ips[target['interface']] = bound_sess.get('https://api.ipify.org/').text
-            myip = interface_ips[target['interface']]
+                if internal:
+                    interface_ips[target_interface] = internal_ip
+                else:
+                    bound_sess = Session()
+                    bound_sess.get_adapter('https://').init_poolmanager(
+                        connections=DEFAULT_POOLSIZE,
+                        maxsize=DEFAULT_POOLSIZE,
+                        source_address=(internal_ip, 0),
+                    )
+                    interface_ips[target_interface] = bound_sess.get('https://api.ipify.org/').text
+            myip = interface_ips[target_interface]
             endpoint = api(
                 '/zones/{zone_id}/dns_records/{id}'.format(
                     zone_id=target['zone_id'],
