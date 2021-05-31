@@ -1,0 +1,11 @@
+[Unit]
+Description=Run cloudflare-updater regularly
+Requires=network-online.target
+After=network-online.target
+
+[Timer]
+OnBootSec=60
+OnUnitActiveSec=30min
+
+[Install]
+WantedBy=timers.target

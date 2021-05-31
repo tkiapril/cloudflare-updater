@@ -1,0 +1,6 @@
+[Unit]
+Description=Update CloudFlare DNS with address from this system
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/cloudflare-updater/.venv/bin/python /usr/local/bin/cloudflare-updater/update_cloudflare.py
